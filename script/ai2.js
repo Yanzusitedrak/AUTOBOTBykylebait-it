@@ -1,38 +1,32 @@
 const axios = require('axios');
 
 module.exports.config = {
-  name: "ai2",
-  version: "69",
-  role: 0,
-  credits: "OtinXSandip", // converted by kira
-  description: "ask AI",
-  usages: "ask <question>",
-  hasPrefix: false,
-  commandCategory: "ai",
-  cooldowns: 0
+    name: "ai",
+    version: "1.0.0",
+    hasPermssion: 0,
+    credits: "Kyle", // Changed the credits to "Kyle"
+    description: "EDUCATIONAL",
+    hasPrefix: false,
+    commandCategory: "AI",
+    usages: "[question]",
+    cooldowns: 10
 };
-  
-module.exports.run = async function ({ api, event, args, message }) {
-  try {
-    const prompt = event.body.trim();
-    if (!prompt) {
-      await api.sendMessage({ body: "Hey I am Ai, ask me questions dear 🤖" }, event.threadID);
-      return;
+
+module.exports.run = async function ({ api, event, args }) {
+    const question = args.join(' ');
+    const apiUrl = `https://markdevsapi-2014427ac33a.herokuapp.com/gpt4?ask=${encodeURIComponent(question)}`;
+
+    if (!question) return api.sendMessage("Please provide a question first.", event.threadID, event.messageID);
+
+    try {
+        api.sendMessage("Please bear with me while I ponder your request...", event.threadID, event.messageID);
+
+        const response = await axios.get(apiUrl);
+        const answer = response.data.answer;
+
+        api.sendMessage(`❖𝗔𝗨𝗧𝗢 𝗕𝗢𝗧 𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘❏\n━━━━━━━━━━━━━━━━━━━\n𝗤𝘂𝗲𝘀𝘁𝗶𝗼𝗻: ${question}\n━━━━━━━━━━━━━━━━━━━\n𝗔𝗻𝘀𝘄𝗲𝗿: ${answer}\n\nthis bot was create by Kyle Bait-it\n𝘊𝘳𝘦𝘥𝘪𝘵𝘴: https://www.facebook.com/kyleyukaro\n━━━━━━━━━━━━━━━━━━━`, event.threadID, event.messageID); // Added the FB link
+    } catch (error) {
+        console.error(error);
+        api.sendMessage("An error occurred while processing your request.", event.threadID);
     }
-    api.setMessageReaction("🔎", event.messageID, (err) => {}, true);
-    const response = await axios.get(`https://sandipapi.onrender.com/gpt?prompt=${encodeURIComponent(prompt)}`);
-    api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-    const answer = response.data.answer;
-
-    await api.sendMessage({
-      body: `𝗕𝗢𝗧 𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 | 🟢
-━━━━━━━━━━━━━━━━━━        
-${answer}
-━━━━━━━━━━━━━━━━━━\n\n- 𝚃𝚑𝚒𝚜 𝚋𝚘𝚝 𝚞𝚗𝚍𝚎𝚛 𝙳𝚎𝚟𝚎𝚕𝚘𝚙𝚎𝚍 𝚋𝚢 Kyle Bait-it\n• 𝗙𝗕𝗟𝗶𝗡𝗞: >>https://www.facebook.com/kyleyukaro<<`,
-    }, event.threadID);
-
-  } catch (error) {
-    console.error("🔴 An error occurred while processing your request.\nPlease contact churchill abing for an error", error.message);
-    api.setMessageReaction("🔴", event.messageID, (err) => {}, true);
-  }
 };
