@@ -1,6 +1,6 @@
 const axios = require('axios');
 module.exports.config = {
-  name: 'ai',
+  name: 'ai2',
   version: '1.0.0',
   role: 0,
   hasPrefix: false,
@@ -26,7 +26,7 @@ module.exports.run = async function({
       data
     } = await axios.get(`https://api-soyeon.onrender.com/api?prompt=${encodeURIComponent(input)}`);
     const response = data.response;
-    api.sendMessage(response + '\n\n𝗖𝗥𝗘𝗔𝗧𝗘 𝗬𝗢𝗨𝗥 𝗢𝗪𝗡 𝗕𝗢𝗧: https://autobotpackk.onrender.com', event.threadID, event.messageID);
+    api.sendMessage('\n______________________________\n',  response + '\n\n______________________________', event.threadID, event.messageID);
   } catch (error) {
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
   }
